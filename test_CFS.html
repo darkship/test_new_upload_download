@@ -1,0 +1,44 @@
+<head>
+  <title>test_CFS</title>
+</head>
+
+<body>
+  <h1>Welcome to Meteor!</h1>
+  {{> loginButtons}}
+  {{> imageUploader}}
+</body>
+
+<template name="imageUploader">
+    <h2>Picture</h2>
+    <p>
+    <p>Upload profile pic:</p>
+    <input name="files" id="files" type="file" multiple/><br/>
+    <br/>
+    <div id="dropzone" class="dropzone">
+        <div style="text-align: center; color: gray;">Drop file to upload</div>
+    </div>
+    <br/>
+        {{#each images}}
+
+            {{>image}}<br>
+        {{else}}
+            No files uploaded.
+        {{/each}}
+        <br>
+        {{#each test}}
+            {{this}}<br>
+        {{/each}}
+
+
+    </p>
+
+</template>
+<template name="image">
+    {{name}}
+    {{#if isImage}}
+    image:
+        <img src="{{url}}" alt="">
+    {{/if}}
+    <input type="button" value="download" class="btnDownload"/>
+    <input type="button" value="remove" class="btnRemove"/>
+</template>
