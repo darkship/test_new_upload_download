@@ -19,6 +19,7 @@ Files = new FS.Collection("Files", {
 
         )]
 });
+CollectionTest=new Mongo.Collection("CollectionTest")
 
 FS.HTTP.setBaseUrl("myBaseUrl")//set "myBaseUrl" instead of "cfs" (default) for fsFile.url()
 
@@ -30,7 +31,7 @@ if (Meteor.isClient) {
         return Files.find();
     };
     Template.imageUploader.test = function () {
-        return ["a","b","c","d"]
+        return CollectionTest.find()
     };
 
     Template.imageUploader.events({
@@ -70,8 +71,15 @@ if (Meteor.isClient) {
 if (Meteor.isServer) {
 
 
+    Meteor.startup(function(){
+        if(!CollectionTest.find().count())
+        {
+            for(var i=0;i<10;i++)
+                CollectionTest.insert({name:"test : "+i})
+        }
+    })
     Meteor.publish("Files", function () {
-        return Files.find({"metadata.owner_id": this.userId})
+        return [Files.find({"metadata.owner_id": this.userId}),CollectionTest.find()]
     })
 
     Files.allow({
