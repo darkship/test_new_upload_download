@@ -24,6 +24,17 @@ CollectionTest=new Mongo.Collection("CollectionTest")
 FS.HTTP.setBaseUrl("myBaseUrl")//set "myBaseUrl" instead of "cfs" (default) for fsFile.url()
 
 if (Meteor.isClient) {
+    Router.map(function()
+    {
+        this.route("file",{
+            where:"server",
+            path:"/myBaseUrl/*"
+        })
+        this.route("home",{
+            path:"/",
+            template:"imageUploader"
+        })
+    })
     Meteor.subscribe("Files")
 
     Template.imageUploader.images = function () {
@@ -62,10 +73,14 @@ if (Meteor.isClient) {
         },
         'click .btnDownload':function(evt,plt)
         {
-            window.location.href=this.url({download:true,auth:100})
+            Router.go(this.url({download:true,auth:100}))
 
         }
     });
+
+    Tracker.autorun(function (){
+        console.log( (Meteor.status().connected)?"connected":"disconnected")
+    })
 }
 
 if (Meteor.isServer) {
@@ -84,18 +99,18 @@ if (Meteor.isServer) {
 
     Files.allow({
         insert: function (userId, fileObj) {
-            return userId==fileObj.metadata.owner_id;
+            return true//fileObj.metadata && userId==fileObj.metadata.owner_id;
         },
         update: function (userId, fileObj) {
-            return userId==fileObj.metadata.owner_id;
+            return true//false;
         },
         remove: function (userId, fileObj) {
-            return userId==fileObj.metadata.owner_id;
+            return true//fileObj.metadata && userId==fileObj.metadata.owner_id;
         },
 // Allow eg. only the user in metadata
 // the shareId is being discussed - eg. for sharing urls
         download: function (userId, fileObj/*, shareId*/) {
-            return userId==fileObj.metadata.owner_id;
+            return true//userId==fileObj.metadata.owner_id;
         },
         fetch: []//????
     });

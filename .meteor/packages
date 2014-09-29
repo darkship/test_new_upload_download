@@ -13,3 +13,5 @@ cfs:standard-packages
 accounts-base
 accounts-password
 accounts-ui
+iron:router
+
